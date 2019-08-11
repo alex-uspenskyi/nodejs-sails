@@ -1,0 +1,28 @@
+cache:
+  key: some-cache
+  paths:
+  - node_modules/
+  - dist/
+
+
+stages:
+  - NPM packages
+  - start_pm2
+
+npm_install:
+  stage: NPM packages
+  tags:
+    - dev
+  script:
+    - npm install
+  only:
+    refs:
+      - staging
+
+start_pm2:
+  stage: start_pm2
+  tags:
+    - dev
+  script:
+    - pm2 kill
+    - NODE_ENV=production sails_environment=staging pm2 start app.js
